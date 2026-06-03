@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-blue
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: myapp
+      version: blue
+
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: blue
+
+    spec:
+      containers:
+        - name: blue-container
+          image: nginx
+          ports:
+            - containerPort: 80
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "<h1 style='color:blue; text-align:center; margin-top:200px;'>BLUE VERSION</h1>" > /usr/share/nginx/html/index.html && \
+              nginx -g 'daemon off;'

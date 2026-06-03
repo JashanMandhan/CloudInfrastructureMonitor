@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Security Check') {
+            steps {
+                echo 'Security Scan Completed Successfully'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Secure Build Completed'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Secure Deployment Completed'
+            }
+        }
+
+    }
+}

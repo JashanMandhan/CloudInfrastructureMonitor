@@ -1,0 +1,24 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+*.tfvars
+
+# SSH Keys — NEVER commit private keys
+devops-key
+*.pem
+*.key
+id_rsa
+id_ed25519
+
+# Ansible
+*.retry
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude
+.claude/

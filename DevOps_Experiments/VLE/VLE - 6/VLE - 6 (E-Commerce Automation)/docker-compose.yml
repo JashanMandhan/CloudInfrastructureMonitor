@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  blue:
+    build: ./blue
+    container_name: ecommerce-blue
+    ports:
+      - "4000:4000"
+    restart: always
+  green:
+    build: ./green
+    container_name: ecommerce-green
+    ports:
+      - "4001:4001"
+    restart: always

@@ -1,0 +1,65 @@
+---
+- name: Q6 - E-Commerce Blue-Green Deployment
+  hosts: app_servers
+  become: yes
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Copy docker-compose file
+      copy:
+        src: docker-compose.yml
+        dest: /opt/ecommerce/docker-compose.yml
+
+    - name: Copy blue app
+      copy:
+        src: blue/
+        dest: /opt/ecommerce/blue/
+
+    - name: Copy green app
+      copy:
+        src: green/
+        dest: /opt/ecommerce/green/
+
+    - name: Copy nginx config
+      copy:
+        src: nginx.conf
+        dest: /etc/nginx/conf.d/ecommerce.conf
+
+    - name: Copy deploy script
+      copy:
+        src: deploy.sh
+        dest: /opt/ecommerce/deploy.sh
+        mode: '0755'
+
+    - name: Build and start containers
+      shell: cd /opt/ecommerce && docker compose up -d --build
+
+    - name: Set initial active environment
+      shell: echo "blue" > /opt/ecommerce/active_env
+
+    - name: Restart Nginx
+      systemd:
+        name: nginx
+        state: restarted
+
+    - name: Verify blue health
+      uri:
+        url: http://localhost:4000/health
+        return_content: yes
+      register: blue_health
+
+    - name: Verify green health
+      uri:
+        url: http://localhost:4001/health
+        return_content: yes
+      register: green_health
+
+    - name: Show results
+      debug:
+        msg:
+          - "Blue: {{ blue_health.content }}"
+          - "Green: {{ green_health.content }}"
